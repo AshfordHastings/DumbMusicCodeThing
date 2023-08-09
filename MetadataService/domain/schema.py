@@ -40,10 +40,11 @@ class PlaylistSongAssociationSchema(Schema):
 
 class UserSchema(Schema):
     userId = fields.Integer(dump_only=True)
-    email = fields.Email()
+    email = fields.Str()
     username = fields.Str()
     displayName = fields.Str()
     password = fields.Str()
+    date_registered = fields.DateTime(dump_only=True)
 
     @post_load
     def make_user(self, data, **kwargs):
@@ -60,6 +61,7 @@ class SongAssociationRequestSchema(Schema):
 class UserRequestSchema(Schema):
     username = fields.Str()
     password = fields.Str()
+    email = fields.Str()
     displayName = fields.Str()
 
     @post_load

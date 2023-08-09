@@ -60,6 +60,7 @@ class User(Base):
     __tablename__ = "users"
     userId: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     username: Mapped[str]
+    password: Mapped[str]
     email: Mapped[str]
     displayName: Mapped[str]
     date_registered: Mapped[datetime.datetime] = mapped_column(DateTime(), server_default=func.now())
@@ -70,7 +71,7 @@ class User(Base):
 class Role(Base):
     __tablename__ = 'roles'
     roleId: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str]
+    roleName: Mapped[str]
 
     user_associations: Mapped['UserRoleAssociation'] = relationship(back_populates='role', cascade="all, delete-orphan")
 

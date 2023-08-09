@@ -3,19 +3,20 @@ import jwt
 
 JWT_SECRET = 'testsecret12345'
 
-def encode_auth_token(user_id):
+def encode_auth_token(user_id, roles=None):
     # Should I use user_id for this?
     try:
         payload = {
             'iss': 'MetadataService',
-            'exp': datetime.utcnow() + datetime.timedelta(days=0, seconds=60),
-            'iat': datetime.utcnow(),
-            'sub': user_id
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=60),
+            'iat': datetime.datetime.utcnow(),
+            'sub': user_id,
+            'roles': roles or []
         }
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
         return token
     except Exception as e:
-        return e
+        raise e
 
 def decode_auth_token(auth_token):
     try:

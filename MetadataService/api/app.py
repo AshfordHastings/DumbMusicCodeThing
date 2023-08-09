@@ -1,5 +1,5 @@
 from flask import Flask, g
-from api.routes import artist_bp, song_bp, playlist_bp
+from api.routes import artist_bp, song_bp, playlist_bp, user_bp
 from api.middleware.auth import load_jwt_claims
 
 def create_app(sessionmaker):
@@ -11,7 +11,7 @@ def create_app(sessionmaker):
 
     @app.before_request
     def init_auth():
-        load_jwt_claims
+        load_jwt_claims()
 
     @app.after_request
     def teardown_db_context(response):
@@ -23,5 +23,6 @@ def create_app(sessionmaker):
     app.register_blueprint(artist_bp, url_prefix='/artists')
     app.register_blueprint(song_bp, url_prefix='/songs')
     app.register_blueprint(playlist_bp, url_prefix='/playlists')
+    app.register_blueprint(user_bp, url_prefix='/users')
     
     return app

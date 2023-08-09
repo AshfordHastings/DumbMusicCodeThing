@@ -1,13 +1,15 @@
+import traceback
 from flask import Blueprint, request, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from adapters import db_ops
 from domain.schema import UserSchema, UserRequestSchema
 from utils.auth import encode_auth_token
-from middleware.auth import token_required
+from api.middleware.auth import require_role
 from api.responses import (
     SUCCESS_200,
     response_with,
-    SUCCESS_201
+    SUCCESS_201,
+    ERROR_500
 )
 
 user_bp = Blueprint('users', __name__)
@@ -24,10 +26,12 @@ def create_user():
         data.update({
             'password': hashed_password
         })
-        obj_user_resource = schema.load(session, data)
+        obj_user_resource = schema.load(data)
         obj_user_resource_persisted = db_ops.insert_user_resource(session, obj_user_resource)
-        dict_user_resource = schema.dump(session, obj_user_resource_persisted)
+        dict_user_resource = schema.dump(obj_user_resource_persisted)
+        session.commit()
     except Exception as e:
+        traceback.print_exc()
         print(e)
         pass
 
@@ -51,16 +55,22 @@ def login():
     if not username or not password:
         print('Invalid Credentials!')
     try:
-        obj_user_resource = db_ops.query_user_by_username(username)
+        obj_user_resource = db_ops.query_user_by_username(session, username)
         if not check_password_hash(obj_user_resource.password, password):
             raise Exception("password wrong!")
-        access_token = encode_auth_token(obj_user_resource.id)
-        return response_with(SUCCESS_201, access_token)
+        access_token = encode_auth_token(obj_user_resource.userId)
+        return response_with(SUCCESS_200, access_token)
     except Exception as e:
+        traceback.print_exc()
         print("Exception!")
 
 
-@user_bp.routes('/get', methods=['GET'])
-@token_required
-def protected_route(current_user_id):
-    return response_with(SUCCESS_200, current_user_id)
+@user_bp.route('/protected', methods=['GET'])
+@require_role('user')
+def protected_route():
+    user_info = {
+        'user_id': g.user_id,
+        'roles': g.roles
+    }
+
+    return response_with(SUCCESS_200, user_info)

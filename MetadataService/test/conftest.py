@@ -1,9 +1,11 @@
 import pytest 
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import sessionmaker
 
 from api.app import create_app
 from domain import Base
+from utils.auth import encode_auth_token
 from .db_scripts.insert_artist_data import insert_artist_data
 
 @pytest.fixture()
@@ -72,6 +74,80 @@ def populate_playlist_data(in_memory_db, populate_empty_playlist_data, populate_
             conn.execute(stmt)
         conn.commit()
     return 
+
+@pytest.fixture()
+def populate_user_data(in_memory_db):
+    users = [
+        {"username": "admin", "password": generate_password_hash("adminpass"), "email": "admin@example.com"},
+        {"username": "user1", "password": generate_password_hash("user1pass"), "email": "user1@example.com"},
+        # ... Add more users as needed
+    ]
+
+    with in_memory_db.connect() as conn:
+        for user in users:
+            stmt = text(f"INSERT INTO users (username, password, email) VALUES (:username, :password, :email)")
+            conn.execute(stmt, **user)
+        conn.commit()
+
+    return
+
+@pytest.fixture()
+def populate_roles_data(in_memory_db):
+    roles = ["admin", "editor", "user"]
+    
+    with in_memory_db.connect() as conn:
+        for role in roles:
+            stmt = text(f"INSERT INTO roles (roleName) VALUES (:role_name)")
+            conn.execute(stmt, {'role_name': role})
+        conn.commit()
+
+    return
+
+@pytest.fixture()
+def populate_user_roles_data(in_memory_db, populate_user_data, populate_roles_data):
+    user_roles = [
+        {"username": "admin", "role": "admin"},
+        {"username": "user1", "role": "user"},
+        # ... Add more associations as needed
+    ]
+
+    with in_memory_db.connect() as conn:
+        for ur in user_roles:
+            stmt = text("""
+                INSERT INTO user_roles (user_id, role_id) 
+                VALUES (
+                    (SELECT id FROM users WHERE username=:username), 
+                    (SELECT id FROM roles WHERE roleName=:role)
+                )
+            """)
+            conn.execute(stmt, **ur)
+        conn.commit()
+
+    return
+
+@pytest.fixture()
+def test_user(in_memory_db):
+    user_data = {
+        "username": "testuser",
+        "password": generate_password_hash("testpassword"),  # Assuming you have hash_password function as shown before
+        "email": "testuser@example.com",
+        'displayName': 'Test User'
+    }
+
+    with in_memory_db.connect() as conn:
+        stmt = text("INSERT INTO users (username, password, email, displayName) VALUES (:username, :password, :email, :displayName)")
+        result = conn.execute(stmt, user_data)
+        user_data["userId"] = result.lastrowid
+        conn.commit()
+
+    return user_data
+
+
+
+@pytest.fixture()
+def test_user_jwt(test_user, populate_roles_data):
+    return encode_auth_token(test_user['userId'], roles=['user'])
+
 
 
 #INSERT INTO playlists_to_songs (playlistId, songId) VALUES ((SELECT playlistId FROM playlists WHERE name=""), (SELECT songId FROM songs WHERE title=""));

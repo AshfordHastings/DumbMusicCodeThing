@@ -116,9 +116,8 @@ def insert_user_resource(session, data):
     return data
 
 def query_user_by_username(session, username):
-    resp_user_resource = session.query(User).filter_by(username=username).first()
+    resp_user_resource = session.query(User).filter(User.username == username).first()
     if resp_user_resource:
         return resp_user_resource
     else:
         raise ResourceNotFound(f"User resource with id of {username} does not exist.")
-    
