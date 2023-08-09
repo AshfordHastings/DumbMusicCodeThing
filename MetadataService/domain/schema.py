@@ -40,8 +40,10 @@ class PlaylistSongAssociationSchema(Schema):
 
 class UserSchema(Schema):
     userId = fields.Integer(dump_only=True)
+    email = fields.Email()
     username = fields.Str()
     displayName = fields.Str()
+    password = fields.Str()
 
     @post_load
     def make_user(self, data, **kwargs):
