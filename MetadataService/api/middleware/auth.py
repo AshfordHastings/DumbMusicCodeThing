@@ -7,6 +7,31 @@ from api.responses import (
     ERROR_401
 )
 
+
+def has_permission(permission, user_id, **kwargs):
+    resource, action, scope = permission.split(':')
+    
+    # Check general permission
+    if f"{resource}:{action}:any" in g.permissions:
+        return True
+
+    # Check ownership if relevant
+    if f"{resource}:{action}:own" in g.permissions:
+        # The ownership check will depend on your application's logic
+        # For example, check if user_id matches the owner of the resource
+
+        return True
+
+        #TODO: Implement this!
+        # resource_id = kwargs.get(f"{resource}_id")
+        # if is_owner(user_id, resource, resource_id):  # Implement this function
+        #     return True
+
+    # Additional checks, like collaborative permissions, could go here
+
+    return False
+    
+
 def load_jwt_claims():
     token = None
     if 'Authorization' in request.headers:
@@ -17,6 +42,7 @@ def load_jwt_claims():
 
     jwt_claims = decode_auth_token(token)
     g.user_id = jwt_claims.get('sub')
+    g.permissions = jwt_claims.get('permissions', [])
     g.roles = jwt_claims.get('roles', [])
     
 def require_role(role_name):
@@ -30,6 +56,24 @@ def require_role(role_name):
         return wrapped
     return decorator
 
+def require_permissions(*permissions):
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            try:
+                user_id = g.user_id
+                for permission in permissions:
+                    #if isinstance(permission, constant)
+                    # if permission not in g.permissions:
+                    #     response_with(ERROR_401, errors='Not Authenticated')
+                    if not has_permission(permission, user_id, **kwargs):
+                        #Edit Error handling here - throw error instead of returning ? 
+                        return response_with(ERROR_401, errors='Not Authenticated')
+                return f(*args, **kwargs)
+            except Exception as e:
+                print(e)
+        return wrapped
+    return decorator
 
 def token_required(f):
     """Decorator to ensure that a resource is accessed with valid token"""

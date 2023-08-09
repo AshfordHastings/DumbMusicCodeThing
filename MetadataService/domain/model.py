@@ -65,7 +65,7 @@ class User(Base):
     displayName: Mapped[str]
     date_registered: Mapped[datetime.datetime] = mapped_column(DateTime(), server_default=func.now())
 
-    role_associations: Mapped['UserRoleAssociation'] = relationship(back_populates='user', cascade="all, delete-orphan")
+    role_associations: Mapped[List['UserRoleAssociation']] = relationship(back_populates='user', cascade="all, delete-orphan")
 
 
 class Role(Base):
@@ -73,7 +73,8 @@ class Role(Base):
     roleId: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     roleName: Mapped[str]
 
-    user_associations: Mapped['UserRoleAssociation'] = relationship(back_populates='role', cascade="all, delete-orphan")
+    user_associations: Mapped[List['UserRoleAssociation']] = relationship(back_populates='role', cascade="all, delete-orphan")
+    permission_associations: Mapped[List['PermissionRoleAssociation']] = relationship(back_populates='role', cascade="all, delete-orphan")
 
 class UserRoleAssociation(Base):
     __tablename__='users_to_roles'
@@ -87,3 +88,19 @@ class UserRoleAssociation(Base):
 
     #playlistsFollowing: Mapped[List['Playlist']] = relationship(secondary=followers_to_playlists_table, back_populates="followers")
 
+class Permission(Base):
+    __tablename__ = 'permissions'
+    permissionId: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    permissionName: Mapped[str]
+
+    role_associations: Mapped[List['PermissionRoleAssociation']] = relationship(back_populates='permission', cascade="all, delete-orphan")
+
+class PermissionRoleAssociation(Base):
+    __tablename__='permissions_to_roles'
+    permissionId: Mapped[int]= mapped_column(ForeignKey('permissions.permissionId'), primary_key=True)
+    roleId: Mapped[int]= mapped_column(ForeignKey('roles.roleId'), primary_key=True)
+    date_added: Mapped[datetime.datetime] = mapped_column(DateTime(), server_default=func.now())
+
+    # Relationships
+    permission: Mapped['Permission'] = relationship(back_populates="role_associations")
+    role: Mapped['Role'] = relationship(back_populates="permission_associations")

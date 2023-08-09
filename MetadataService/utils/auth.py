@@ -3,7 +3,7 @@ import jwt
 
 JWT_SECRET = 'testsecret12345'
 
-def encode_auth_token(user_id, roles=None):
+def encode_auth_token(user_id, roles=None, permissions=None):
     # Should I use user_id for this?
     try:
         payload = {
@@ -11,7 +11,8 @@ def encode_auth_token(user_id, roles=None):
             'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=60),
             'iat': datetime.datetime.utcnow(),
             'sub': user_id,
-            'roles': roles or []
+            'roles': roles or [],
+            'permissions': permissions or []
         }
         token = jwt.encode(payload, JWT_SECRET, algorithm='HS256')
         return token

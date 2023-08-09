@@ -7,6 +7,7 @@ from api.app import create_app
 from domain import Base
 from utils.auth import encode_auth_token
 from .db_scripts.insert_artist_data import insert_artist_data
+import domain.permissions as p
 
 @pytest.fixture()
 def in_memory_db():
@@ -167,6 +168,15 @@ def test_admin_jwt(test_user, populate_roles_data):
 def test_user_jwt(test_user, populate_roles_data):
     return encode_auth_token(test_user['userId'], roles=['user'])
 
+all_permissions = [
+    p.PLAYLIST_CREATE_ANY,
+    p.PLAYLIST_DELETE_ANY,
+    p.PLAYLIST_EDIT_ANY,
+    p.PLAYLIST_READ_ANY
+]
 
+@pytest.fixture()
+def test_user_with_permissions_jwt(test_user, populate_roles_data):
+    return encode_auth_token(test_user['userId'], roles=['user'], permissions=all_permissions)
 
 #INSERT INTO playlists_to_songs (playlistId, songId) VALUES ((SELECT playlistId FROM playlists WHERE name=""), (SELECT songId FROM songs WHERE title=""));

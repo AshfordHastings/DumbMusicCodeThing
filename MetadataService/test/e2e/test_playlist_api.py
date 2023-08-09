@@ -16,9 +16,9 @@ def generate_playlist_dict():
         "name": "Test Playlist"
     }
 
-def test_create_playlist(client, test_user_jwt):
+def test_create_playlist(client, test_user_with_permissions_jwt):
     # Create a new playlist
-    headers = get_auth_header(test_user_jwt)
+    headers = get_auth_header(test_user_with_permissions_jwt)
     test_playlist_dict = generate_playlist_dict()
     resp = client.post(f"/playlists/", data=json.dumps(test_playlist_dict), content_type='application/json', headers=headers)
    
@@ -32,8 +32,8 @@ def test_create_playlist(client, test_user_jwt):
     assert "name" in value.keys()
 
 @pytest.mark.usefixtures('populate_artist_data', 'populate_song_data')
-def test_add_song_to_playlist(client, test_user_jwt):
-    headers = get_auth_header(test_user_jwt)
+def test_add_song_to_playlist(client, test_user_with_permissions_jwt):
+    headers = get_auth_header(test_user_with_permissions_jwt)
     test_playlist_dict = generate_playlist_dict()
 
     # Create Playlist
@@ -54,8 +54,8 @@ def test_add_song_to_playlist(client, test_user_jwt):
     assert "song" in value.keys()
 
 @pytest.mark.usefixtures('populate_playlist_data')
-def test_get_songs_in_playlist(client, test_user_jwt):
-    headers = get_auth_header(test_user_jwt)
+def test_get_songs_in_playlist(client, test_user_with_permissions_jwt):
+    headers = get_auth_header(test_user_with_permissions_jwt)
     resp = client.get(f"/playlists/1/songs", headers=headers)
    
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
