@@ -2,6 +2,7 @@ from flask import Blueprint, request, g
 
 from adapters import db_ops
 from domain.schema import ArtistSchema
+from api.middleware.auth import require_role
 from api.responses import (
     response_with,
     SUCCESS_200,
@@ -12,6 +13,7 @@ from api.responses import (
 artist_bp = Blueprint('artists', __name__)
 
 @artist_bp.route('/', methods=["GET"])
+@require_role('user')
 def get_artist_list():
     session = g.db_session
     schema = ArtistSchema(many=True)
@@ -22,6 +24,7 @@ def get_artist_list():
     return response_with(SUCCESS_200, dict_artist_list)
 
 @artist_bp.route('/<artist_id>', methods=["GET"])
+@require_role('user')
 def get_artist_resource(artist_id):
     session = g.db_session
     schema = ArtistSchema()
@@ -32,6 +35,7 @@ def get_artist_resource(artist_id):
     return response_with(SUCCESS_200, dict_artist_resource)
 
 @artist_bp.route('/', methods=["POST"])
+@require_role('admin')
 def create_artist_resource():
     session = g.db_session
     schema = ArtistSchema()
@@ -47,6 +51,7 @@ def create_artist_resource():
     return response_with(SUCCESS_201, dict_artist_resource_persisted)
 
 @artist_bp.route('/<artist_id>', methods=["DELETE"])
+@require_role('admin')
 def remove_artist_resource(artist_id):
     session = g.db_session
 

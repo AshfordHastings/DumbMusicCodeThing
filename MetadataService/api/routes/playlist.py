@@ -4,6 +4,7 @@ from marshmallow import ValidationError
 
 from adapters import db_ops
 from domain.schema import PlaylistSchema, PlaylistSongAssociationSchema, SongAssociationRequestSchema
+from api.middleware.auth import require_role
 from api.responses import (
     response_with,
     SUCCESS_200,
@@ -13,6 +14,7 @@ from api.responses import (
 playlist_bp = Blueprint('playlists', __name__)
 
 @playlist_bp.route('/', methods=["GET"])
+@require_role('user')
 def get_playlist_list():
     session = g.db_session
     schema = PlaylistSchema(many=True)
@@ -23,6 +25,7 @@ def get_playlist_list():
     return response_with(SUCCESS_200, dict_playlist_list)
 
 @playlist_bp.route('/<playlist_id>', methods=["GET"])
+@require_role('user')
 def get_playlist_resource(playlist_id):
     session = g.db_session
     schema = PlaylistSchema()
@@ -33,6 +36,7 @@ def get_playlist_resource(playlist_id):
     return response_with(SUCCESS_200, dict_playlist_resource)
 
 @playlist_bp.route('/', methods=["POST"])
+@require_role('user')
 def create_playlist_resource():
     session = g.db_session
     schema = PlaylistSchema()
@@ -48,6 +52,7 @@ def create_playlist_resource():
 
 
 @playlist_bp.route('/<playlist_id>/songs', methods=['GET'])
+@require_role('user')
 def get_songs_association_list_from_playlist(playlist_id):
     session = g.db_session
     schema = PlaylistSongAssociationSchema(many=True)
@@ -58,6 +63,7 @@ def get_songs_association_list_from_playlist(playlist_id):
     return response_with(SUCCESS_200, dict_song_association_list)
 
 @playlist_bp.route('/<playlist_id>/songs', methods=['POST'])
+@require_role('user')
 def create_song_association_in_playlist(playlist_id):
     session = g.db_session
     req_schema = SongAssociationRequestSchema()

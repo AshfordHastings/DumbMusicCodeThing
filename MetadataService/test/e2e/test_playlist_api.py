@@ -1,4 +1,5 @@
 import pytest, json
+from test.util.auth import get_auth_header
 
 def generate_artist_dict():
     return {
@@ -15,10 +16,11 @@ def generate_playlist_dict():
         "name": "Test Playlist"
     }
 
-def test_create_playlist(client):
+def test_create_playlist(client, test_user_jwt):
     # Create a new playlist
+    headers = get_auth_header(test_user_jwt)
     test_playlist_dict = generate_playlist_dict()
-    resp = client.post(f"/playlists/", data=json.dumps(test_playlist_dict), content_type='application/json')
+    resp = client.post(f"/playlists/", data=json.dumps(test_playlist_dict), content_type='application/json', headers=headers)
    
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
@@ -30,15 +32,16 @@ def test_create_playlist(client):
     assert "name" in value.keys()
 
 @pytest.mark.usefixtures('populate_artist_data', 'populate_song_data')
-def test_add_song_to_playlist(client):
+def test_add_song_to_playlist(client, test_user_jwt):
+    headers = get_auth_header(test_user_jwt)
     test_playlist_dict = generate_playlist_dict()
 
     # Create Playlist
-    resp = client.post(f"/playlists/", data=json.dumps(test_playlist_dict), content_type='application/json')
+    resp = client.post(f"/playlists/", data=json.dumps(test_playlist_dict), content_type='application/json', headers=headers)
     playlist_id = resp.json['value']['playlistId']
 
 
-    resp = client.post(f"/playlists/{playlist_id}/songs", data=json.dumps({"songId": 1}), content_type='application/json')
+    resp = client.post(f"/playlists/{playlist_id}/songs", data=json.dumps({"songId": 1}), content_type='application/json', headers=headers)
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
@@ -51,8 +54,9 @@ def test_add_song_to_playlist(client):
     assert "song" in value.keys()
 
 @pytest.mark.usefixtures('populate_playlist_data')
-def test_get_songs_in_playlist(client):
-    resp = client.get(f"/playlists/1/songs")
+def test_get_songs_in_playlist(client, test_user_jwt):
+    headers = get_auth_header(test_user_jwt)
+    resp = client.get(f"/playlists/1/songs", headers=headers)
    
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 

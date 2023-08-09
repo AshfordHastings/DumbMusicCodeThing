@@ -1,6 +1,7 @@
 import json
 import pytest
 from utils.auth import decode_auth_token
+from test.util.auth import get_auth_header
 
 def generate_user_dict():
     return {
@@ -54,9 +55,7 @@ def test_login_user(client):
     assert decoded_token.get('sub') == user_id
 
 def test_protected_user_route(client, test_user, test_user_jwt):
-    headers = {
-        "Authorization": f"Bearer {test_user_jwt}"
-    }
+    headers = get_auth_header(test_user_jwt)
     resp = client.get("/users/protected", headers=headers)
 
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)

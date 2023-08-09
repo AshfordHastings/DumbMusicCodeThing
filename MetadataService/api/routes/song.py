@@ -2,6 +2,7 @@ from flask import Blueprint, g, request
 
 from adapters import db_ops
 from domain.schema import SongSchema
+from api.middleware.auth import require_role
 from api.responses import (
     response_with,
     SUCCESS_200,
@@ -12,6 +13,7 @@ from api.responses import (
 song_bp = Blueprint('songs', __name__)
 
 @song_bp.route('/', methods=['GET'])
+@require_role('user')
 def get_song_list():
     session = g.db_session
     schema = SongSchema(many=True)
@@ -22,6 +24,7 @@ def get_song_list():
     return response_with(SUCCESS_200, dict_song_list)
 
 @song_bp.route('/<song_id>', methods=["GET"])
+@require_role('user')
 def get_song_resource(song_id):
     session = g.db_session
     schema = SongSchema()
@@ -32,6 +35,7 @@ def get_song_resource(song_id):
     return response_with(SUCCESS_200, dict_song_resource)
 
 @song_bp.route('/', methods=["POST"])
+@require_role('admin')
 def create_song_resource():
     session = g.db_session
     schema = SongSchema()
@@ -48,6 +52,7 @@ def create_song_resource():
 
 
 @song_bp.route('/<song_id>', methods=["DELETE"])
+@require_role('admin')
 def remove_song_resource(song_id):
     session = g.db_session
 

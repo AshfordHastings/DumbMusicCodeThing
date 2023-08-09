@@ -142,7 +142,26 @@ def test_user(in_memory_db):
 
     return user_data
 
+@pytest.fixture()
+def test_admin(in_memory_db):
+    user_data = {
+        "username": "testadmin",
+        "password": generate_password_hash("testpassword"),  # Assuming you have hash_password function as shown before
+        "email": "testadmin@example.com",
+        'displayName': 'Test Admin'
+    }
 
+    with in_memory_db.connect() as conn:
+        stmt = text("INSERT INTO users (username, password, email, displayName) VALUES (:username, :password, :email, :displayName)")
+        result = conn.execute(stmt, user_data)
+        user_data["userId"] = result.lastrowid
+        conn.commit()
+
+    return user_data
+
+@pytest.fixture()
+def test_admin_jwt(test_user, populate_roles_data):
+    return encode_auth_token(test_user['userId'], roles=['admin', 'user'])
 
 @pytest.fixture()
 def test_user_jwt(test_user, populate_roles_data):
