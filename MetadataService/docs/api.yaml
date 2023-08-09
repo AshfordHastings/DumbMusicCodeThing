@@ -1,0 +1,79 @@
+openapi: 3.0.0
+
+paths:
+  /songs:
+    
+  /songs/{songId}:
+    pass
+  /artists:
+    pass
+  /playlists:
+    get:
+      summary: Returns a list of playlists.
+      parameters:
+        pass
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Playlist'
+    post: 
+      summary: Add a new playlist.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Playlist'
+      responses:
+        '201':
+          description: Created
+          
+
+  /playlists/{playlistId}:
+    pass
+  /playlists/{playlistId}/followers:
+    pass
+  /users:
+    pass
+  /users/{userId}:
+    pass
+
+components:
+  schemas:
+    Song: 
+      type: object 
+      properties:
+        songId: 
+          type: integer
+          example: 21
+        title:
+          type: string
+          example: "After the Gold Rush"
+      required:
+        - title
+    Artist: 
+      type: object 
+      properties:
+        artistId: 
+          type: integer
+          example: 21
+        name:
+          type: string
+          example: "Neil Young"
+      required:
+        - name
+    Playlist: 
+      type: object
+      properties:
+        playlistId: 
+          type: integer
+          example: 21
+        title: 
+          type: string 
+          example: "Ashford's Favs"
+        
+
+

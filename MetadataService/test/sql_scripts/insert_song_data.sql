@@ -1,0 +1,17 @@
+INSERT INTO songs (title, artistId) VALUES ("Nutshell", (SELECT artistId FROM artists WHERE name="Alice in Chains"));
+INSERT INTO songs (title, artistId) VALUES ("Down in a Hole", (SELECT artistId FROM artists WHERE name="Alice in Chains"));
+INSERT INTO songs (title, artistId) VALUES ("Frogs", (SELECT artistId FROM artists WHERE name="Alice in Chains"));
+INSERT INTO songs (title, artistId) VALUES ("Born to Run", (SELECT artistId FROM artists WHERE name="Bruce Springsteen"));
+INSERT INTO songs (title, artistId) VALUES ("Nebraska", (SELECT artistId FROM artists WHERE name="Bruce Springsteen"));
+INSERT INTO songs (title, artistId) VALUES ("Badlands", (SELECT artistId FROM artists WHERE name="Bruce Springsteen"));
+INSERT INTO songs (title, artistId) VALUES ("Friday I'm In Love", (SELECT artistId FROM artists WHERE name="The Cure"));
+INSERT INTO songs (title, artistId) VALUES ("The Hanging Garden", (SELECT artistId FROM artists WHERE name="The Cure"));
+INSERT INTO songs (title, artistId) VALUES ("This Charming Man", (SELECT artistId FROM artists WHERE name="The Smiths"));
+INSERT INTO songs (title, artistId) VALUES ("Learn to Fly", (SELECT artistId FROM artists WHERE name="Foo Fighters"));
+INSERT INTO songs (title, artistId) VALUES ("Sometimes", (SELECT artistId FROM artists WHERE name="My Bloody Valentine"));
+INSERT INTO songs (title, artistId) VALUES ("Only Shallow", (SELECT artistId FROM artists WHERE name="My Bloody Valentine"));
+INSERT INTO songs (title, artistId) VALUES ("When You Sleep", (SELECT artistId FROM artists WHERE name="My Bloody Valentine"));
+INSERT INTO songs (title, artistId) VALUES ("Black Dog", (SELECT artistId FROM artists WHERE name="Led Zeppelin"));
+INSERT INTO songs (title, artistId) VALUES ("Battle of Evermore", (SELECT artistId FROM artists WHERE name="Led Zeppelin"));
+INSERT INTO songs (title, artistId) VALUES ("Misty Mountain Hop", (SELECT artistId FROM artists WHERE name="Led Zeppelin"));
+INSERT INTO songs (title, artistId) VALUES ("Cripple Creek Ferry", (SELECT artistId FROM artists WHERE name="Neil Young"));

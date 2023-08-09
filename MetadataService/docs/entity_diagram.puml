@@ -1,0 +1,42 @@
+@startuml
+!define primary_key(x) <b><color:#b8861b><&key></color> x</b>
+!define foreign_key(x) <color:#aaaaaa><&key></color> x
+!define column(x) <color:#efefef><&media-record></color> x
+!define table(x) entity x << (T, white) >>
+
+table( Song ) {
+    primary_key( songId ): UUID
+    ' foreign_key( albumId ): UUID <<FK>>
+    foreign_key( artistId ): UUID <<FK>>
+    column( title ): STRING
+    column( length ): INT
+}
+
+table( Playlist ) {
+    primary_key( playlistId ): UUID
+    foreign_key( userId ): UUID
+    column( title ): STRING
+
+}
+
+table( Album ) {
+    primary_key( albumId ): UUID
+}
+
+table( Artist ) {
+    primary_key( artistId ): UUID
+    column( name ): UUID
+}
+
+table( User ) {
+    primary_key( userId ): UUID
+    column( username ): STRING
+    column( display_name ): STRING
+}
+
+
+Song }o--|| Album
+Song }o--|| Artist
+Album }o--|| Artist
+Song }o--o{Playlist
+Playlist }o--||User
