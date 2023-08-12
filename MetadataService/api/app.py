@@ -1,5 +1,5 @@
 from flask import Flask, g
-from api.routes import artist_bp, song_bp, playlist_bp, user_bp
+from api.routes import artist_bp, song_bp, playlist_bp, user_bp, health_bp
 from api.middleware import init_auth, init_db_session
 from api.responses import init_error_handlers
 from cfg import TestingConfig, DevelopmentConfig
@@ -22,5 +22,7 @@ def create_app(config_name='development'):
     app.register_blueprint(song_bp, url_prefix='/songs')
     app.register_blueprint(playlist_bp, url_prefix='/playlists')
     app.register_blueprint(user_bp, url_prefix='/users')
+
+    app.register_blueprint(health_bp, url_prefix='/health')
     
     return app
