@@ -2,16 +2,23 @@ from flask import request, g
 from functools import wraps
 
 from utils.auth import decode_auth_token
-from api.responses import (
+from api.responses.response_with import (
     response_with,
-    ERROR_401
 )
+from api.responses.responses import (
+    UNAUTHORIZED_401,
+)
+
+def init_app(app):
+    @app.before_request
+    def init_jwt_auth():
+        load_jwt_claims()
 
 
 def has_permission(permission, user_id, **kwargs):
     resource, action, scope = permission.split(':')
     
-    # Check general permission
+    # Check sddgeneral permission
     if f"{resource}:{action}:any" in g.permissions:
         return True
 
@@ -38,7 +45,7 @@ def load_jwt_claims():
         token = request.headers['Authorization'].replace('Bearer ', '')
     
     if not token:
-        return response_with(ERROR_401, errors='Token is missing!')
+        return response_with(UNAUTHORIZED_401, errors='Token is missing!')
 
     jwt_claims = decode_auth_token(token)
     g.user_id = jwt_claims.get('sub')
@@ -50,7 +57,7 @@ def require_role(role_name):
         @wraps(f)
         def wrapped(*args, **kwargs):
             if role_name not in g.roles:
-                response_with(ERROR_401, errors='Not Authenticated')
+                response_with(UNAUTHORIZED_401, errors='Not Authenticated')
             else:
                 return f(*args, **kwargs)
         return wrapped
@@ -68,7 +75,7 @@ def require_permissions(*permissions):
                     #     response_with(ERROR_401, errors='Not Authenticated')
                     if not has_permission(permission, user_id, **kwargs):
                         #Edit Error handling here - throw error instead of returning ? 
-                        return response_with(ERROR_401, errors='Not Authenticated')
+                        return response_with(UNAUTHORIZED_401, errors='Not Authenticated')
                 return f(*args, **kwargs)
             except Exception as e:
                 print(e)
@@ -84,12 +91,12 @@ def token_required(f):
             token = request.headers['Authorization'].replace('Bearer ', '')
         
         if not token:
-            return response_with(ERROR_401, errors='Token is missing!')
+            return response_with(UNAUTHORIZED_401, errors='Token is missing!')
 
         current_user_id = decode_auth_token(token)
         if isinstance(current_user_id, str):
             # Error occurred in decoding
-            return response_with(ERROR_401)
+            return response_with(UNAUTHORIZED_401)
             #return jsonify({'message': current_user_id}), 401
 
         return f(current_user_id, *args, **kwargs)

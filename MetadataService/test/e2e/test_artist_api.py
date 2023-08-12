@@ -28,6 +28,8 @@ def test_get_artist_list(client, test_user_jwt):
     assert all("artistId" in item.keys() for item in value)
     assert all("name" in item.keys() for item in value)
 
+    print()
+
 @pytest.mark.usefixtures('populate_artist_data')
 def test_get_artist_resource(client, test_user_jwt):
     headers = get_auth_header(test_user_jwt)
@@ -38,6 +40,8 @@ def test_get_artist_resource(client, test_user_jwt):
     assert resp.status_code == 200
     assert message == 'success'
     assert error == None
+
+    print(f"Artist: {value}")
 
     assert "artistId" in value.keys() 
     assert "name" in value.keys()
