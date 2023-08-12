@@ -25,7 +25,7 @@ def test_create_user(client):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
-    assert message == 'success'
+    assert message == 'Created'
     assert error == None
 
     assert "userId" in value.keys() 
@@ -47,7 +47,7 @@ def test_login_user(client):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     decoded_token = decode_auth_token(value)

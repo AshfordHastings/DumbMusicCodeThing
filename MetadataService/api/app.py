@@ -2,9 +2,16 @@ from flask import Flask, g
 from api.routes import artist_bp, song_bp, playlist_bp, user_bp
 from api.middleware import init_auth, init_db_session
 from api.responses import init_error_handlers
+from cfg import TestingConfig, DevelopmentConfig
 
-def create_app(sessionmaker):
+CONFIG_MAPPER = {
+    'testing': TestingConfig,
+    'development': DevelopmentConfig
+}
+
+def create_app(config_name='development'):
     app = Flask(__name__)
+    app.config.from_object(CONFIG_MAPPER[config_name])
 
     init_db_session(app)
     init_auth(app)

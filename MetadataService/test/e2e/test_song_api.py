@@ -20,7 +20,7 @@ def test_get_song_list(client, test_user_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     assert any("songId" in item.keys() for item in value)
@@ -35,7 +35,7 @@ def test_get_song_resource(client, test_user_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     assert "songId" in value.keys() 
@@ -73,7 +73,7 @@ def test_create_song_with_artist_resource(client, test_admin_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
-    assert message == 'success'
+    assert message == 'Created'
     assert error == None
 
     assert "songId" in value.keys() 

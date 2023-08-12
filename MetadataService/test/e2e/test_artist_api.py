@@ -21,14 +21,13 @@ def test_get_artist_list(client, test_user_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     assert any("artistId" in item.keys() for item in value)
     assert all("artistId" in item.keys() for item in value)
     assert all("name" in item.keys() for item in value)
 
-    print()
 
 @pytest.mark.usefixtures('populate_artist_data')
 def test_get_artist_resource(client, test_user_jwt):
@@ -38,7 +37,7 @@ def test_get_artist_resource(client, test_user_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     print(f"Artist: {value}")
@@ -56,7 +55,7 @@ def test_create_artist_resource(client, test_admin_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
-    assert message == 'success'
+    assert message == 'Created'
     assert error == None
 
     assert "artistId" in value.keys() 

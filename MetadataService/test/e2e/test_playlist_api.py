@@ -25,7 +25,7 @@ def test_create_playlist(client, test_user_with_permissions_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
-    assert message == 'success'
+    assert message == 'Created'
     assert error == None
 
     assert "playlistId" in value.keys() 
@@ -45,7 +45,7 @@ def test_add_song_to_playlist(client, test_user_with_permissions_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 201
-    assert message == 'success'
+    assert message == 'Created'
     assert error == None
 
     assert "date_added" in value.keys() 
@@ -61,7 +61,7 @@ def test_get_songs_in_playlist(client, test_user_with_permissions_jwt):
     message, value, error = resp.json.get('message', None), resp.json.get('value', None), resp.json.get('error', None)
 
     assert resp.status_code == 200
-    assert message == 'success'
+    assert message == 'OK'
     assert error == None
 
     assert all("songId" in item.keys() for item in value)
