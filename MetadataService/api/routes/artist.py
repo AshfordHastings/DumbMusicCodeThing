@@ -3,7 +3,7 @@ from flask import Blueprint, request, g
 from adapters import db_ops
 from domain.schema import ArtistSchema
 from api.middleware.auth import require_role
-from api.responses import (
+from util.responses import (
     response_with,
     SUCCESS_200,
     SUCCESS_201,

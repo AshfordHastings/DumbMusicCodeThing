@@ -1,6 +1,6 @@
 from flask import Blueprint
 
-from api.responses import (
+from util.responses import (
     response_with,
     SUCCESS_204,  
 )

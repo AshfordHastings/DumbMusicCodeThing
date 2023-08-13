@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.orm import sessionmaker
 from api.app import create_app
 from domain import Base
-from utils.auth import encode_auth_token
+from util.auth import encode_auth_token
 from .db_scripts.insert_artist_data import insert_artist_data
 import domain.permissions as p
 

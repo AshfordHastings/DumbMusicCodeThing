@@ -5,7 +5,7 @@ from domain.permissions import PLAYLIST_CREATE_ANY, PLAYLIST_DELETE_ANY, PLAYLIS
 from adapters import db_ops
 from domain.schema import PlaylistSchema, PlaylistSongAssociationSchema, SongAssociationRequestSchema
 from api.middleware.auth import require_role, require_permissions
-from api.responses import (
+from util.responses import (
     response_with,
     SUCCESS_200,
     SUCCESS_201

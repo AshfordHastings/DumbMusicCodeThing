@@ -1,13 +1,8 @@
 from flask import request, g
 from functools import wraps
 
-from utils.auth import decode_auth_token
-from api.responses.response_with import (
-    response_with,
-)
-from api.responses.responses import (
-    UNAUTHORIZED_401,
-)
+from util.auth import decode_auth_token
+from util.responses import response_with, UNAUTHORIZED_401
 
 def init_app(app):
     @app.before_request

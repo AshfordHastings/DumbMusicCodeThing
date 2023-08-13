@@ -3,24 +3,19 @@ from sqlalchemy import String, Integer, ForeignKey, Table, Column, DateTime, fun
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
 
-from domain import Base
+# from domain import Base as init_base
 
-# playlists_to_songs_table = Table(
-#     "playlists_to_songs",
-#     Base.metadata,
-#     Column("playlistId", ForeignKey("playlists.playlistId"), primary_key=True),
-#     Column("songId", ForeignKey("songs.songId"), primary_key=True)
-# )
+# Base = init_base
+# from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 
-# followers_to_playlists_table = Table(
-#     "followers_to_playlists",
-#     Base.metadata,
-#     Column("followerId", ForeignKey("users.userId"), primary_key=True),
-#     Column("playlistId", ForeignKey("playlists.playlistId"), primary_key=True)
-# )
+class Base(DeclarativeBase):
+    pass
+# Base = declarative_base()
 
 class PlaylistSongAssociation(Base):
     __tablename__ = 'playlists_to_songs'
+    __table_args__ = {'extend_existing': True}
     playlistId: Mapped[int]= mapped_column(ForeignKey('playlists.playlistId'), primary_key=True)
     songId: Mapped[int]= mapped_column(ForeignKey('songs.songId'), primary_key=True)
     date_added: Mapped[datetime.datetime] = mapped_column(DateTime(), server_default=func.now())

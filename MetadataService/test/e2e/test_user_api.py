@@ -1,6 +1,6 @@
 import json
 import pytest
-from utils.auth import decode_auth_token
+from util.auth import decode_auth_token
 from test.util.auth import get_auth_header
 
 def generate_user_dict():

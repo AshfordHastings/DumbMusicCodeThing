@@ -1,11 +1,5 @@
-
+from util.responses import response_with, ERROR_500, NOT_FOUND_404
 from exc import ResourceNotFound
-from api.responses.responses import (
-    NOT_FOUND_404,
-    ERROR_500
-)
-from api.responses import response_with
-
 
 def init_app(app):
 

@@ -1,6 +1,3 @@
-from sqlalchemy.orm import DeclarativeBase
-
-class Base(DeclarativeBase):
-    pass
+from .model import Base
 
 from .schema import ArtistSchema, SongSchema, UserSchema, PlaylistSchema

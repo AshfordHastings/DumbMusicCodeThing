@@ -3,9 +3,9 @@ from flask import Blueprint, request, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from adapters import db_ops
 from domain.schema import UserSchema, UserRequestSchema
-from utils.auth import encode_auth_token
+from util.auth import encode_auth_token
 from api.middleware.auth import require_role
-from api.responses import (
+from util.responses import (
     SUCCESS_200,
     response_with,
     SUCCESS_201,
