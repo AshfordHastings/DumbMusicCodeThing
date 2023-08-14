@@ -3,15 +3,9 @@ from sqlalchemy import String, Integer, ForeignKey, Table, Column, DateTime, fun
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import List
 
-# from domain import Base as init_base
-
-# Base = init_base
-# from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import DeclarativeBase
-
 class Base(DeclarativeBase):
     pass
-# Base = declarative_base()
 
 class PlaylistSongAssociation(Base):
     __tablename__ = 'playlists_to_songs'
@@ -50,7 +44,7 @@ class Playlist(Base):
     #followers: Mapped[List['User']] = relationship(secondary=followers_to_playlists_table, back_populates="playlistsFollowing")
     # songs: Mapped[List['Song']] = relationship(secondary=playlists_to_songs_table)
     
-    
+
 class User(Base):
     __tablename__ = "users"
     userId: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
