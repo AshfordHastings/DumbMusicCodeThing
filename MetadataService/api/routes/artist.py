@@ -13,7 +13,7 @@ from util.responses import (
 artist_bp = Blueprint('artists', __name__)
 
 @artist_bp.route('/', methods=["GET"])
-@require_role('user')
+#@require_role('user')
 def get_artist_list():
     session = g.db_session
     schema = ArtistSchema(many=True)

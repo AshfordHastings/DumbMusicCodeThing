@@ -29,7 +29,7 @@ def generate_users_and_associate_with_roles(session, num_users=50, role_name="us
 if __name__ == "__main__":
     try:
         session = Session()
-        #seed_auth_permission_roles(session)
+        seed_auth_permission_roles(session)
         generate_users_and_associate_with_roles(session)
     except Exception as e:
         print(e)

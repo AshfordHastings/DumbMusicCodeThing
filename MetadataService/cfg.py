@@ -7,6 +7,7 @@ class TestingConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    DATABASE_URI = "sqlite:///dev.db"
+    DATABASE_URI = "postgresql://postgres:password@db:5432/metadata_db"
+    BYPASS_AUTH = True
 
     

@@ -1,13 +1,18 @@
-import csv
+import csv, os
 from MetadataService.domain.model import Role, Permission, PermissionRoleAssociation
 
-CSV_PATH = 'data/roles_permissions.csv'
+# Get the directory of the current script
+script_dir = os.path.dirname(os.path.realpath(__file__))
+CSV_DATA = 'data/roles_permissions.csv'
+
+# Construct the full path to the CSV
+csv_path = os.path.join(script_dir, CSV_DATA)
 
 def seed_from_csv(session):
     roles = {}  # To store roles and avoid duplicates
     permissions = {}  # To store permissions and avoid duplicates
 
-    with open(CSV_PATH, 'r') as csv_file:
+    with open(csv_path, 'r') as csv_file:
         reader = csv.DictReader(csv_file)
         for row in reader:
             role_name = row['role']

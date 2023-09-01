@@ -1,4 +1,4 @@
-from flask import request, g
+from flask import request, g, current_app
 from functools import wraps
 
 from util.auth import decode_auth_token
@@ -51,6 +51,8 @@ def require_role(role_name):
     def decorator(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
+            if current_app.config['BYPASS_AUTH']:
+                return f(*args, **kwargs)
             if role_name not in g.roles:
                 response_with(UNAUTHORIZED_401, errors='Not Authenticated')
             else:
@@ -62,6 +64,8 @@ def require_permissions(*permissions):
     def decorator(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
+            if current_app.config['BYPASS_AUTH']:
+                return f(*args, **kwargs)
             try:
                 user_id = g.user_id
                 for permission in permissions:
