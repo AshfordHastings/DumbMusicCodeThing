@@ -11,6 +11,7 @@ Session = scoped_session(sessionmaker(bind=engine))
 
 
 def init_db():
+    print(get_config())
     Base.metadata.create_all(engine)
 
 def close_db():

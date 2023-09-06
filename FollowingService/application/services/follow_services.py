@@ -4,7 +4,8 @@ from infrastructure.db.repository_factory import get_follow_record_repo
 from infrastructure.db.exc import FollowRecordAlreadyExistsError, FollowRecordNotFoundError
 from domain.services.follow import is_duplicate_follow
 from domain.utils.follow_utils import FolloweeFactory, FollowerFactory
-
+from domain.events.dispatcher import dispatch_event
+from domain.events.follow_events import EntityFollowedEvent
 # def get_follow_status(user_id, entity_id, entity_type):
 #     with Session() as session:
 #         follow_record = db_ops.query_follow_record_resource(session, user_id, entity_id, entity_type)
@@ -51,6 +52,7 @@ def follow_entity(follower_id, followee_id, entity_type):
         except FollowRecordAlreadyExistsError:
             raise ValueError("Duplicate follow record")
         
+    dispatch_event(EntityFollowedEvent(follower_id, followee_id, entity_type))
     return follow_record
 
 def unfollow_entity(follower_id, followee_id, entity_type):
